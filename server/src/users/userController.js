@@ -7,6 +7,7 @@ import Balance from '../balance/balanceModel';
 const signup = async (req, res, next) => {
   const { password, email, confirm } = req.body;
   const regexW = /^(?=.*[-+_!@#$%^&*.,?])/;
+  console.log(req.body)
   if (!regexW.test(password)) throw new Exception('At least one special character', 'specialCharacter');
   if (password !== confirm) throw new Exception('Password and confirm password does not match', 'confirm');
   const rand = randtoken.generator();
