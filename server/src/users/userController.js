@@ -1,4 +1,5 @@
 import passport from 'passport';
+import randtoken from 'rand-token';
 import { Exception, codeGenerate } from '../../handler/errors';
 import User from './userModel';
 import Balance from '../balance/balanceModel';
@@ -8,9 +9,12 @@ const signup = async (req, res, next) => {
   const regexW = /^(?=.*[-+_!@#$%^&*.,?])/;
   if (!regexW.test(password)) throw new Exception('At least one special character', 'specialCharacter');
   if (password !== confirm) throw new Exception('Password and confirm password does not match', 'confirm');
+  const rand = randtoken.generator();
   const balance = new Balance();
+  const text = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
   const user = new User({
     email,
+    transactionKey: rand.generate(16, text),
     _balance: balance._id,
   });
   try {

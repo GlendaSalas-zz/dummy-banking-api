@@ -14,7 +14,7 @@
   },
   "scripts": {
     "dev": "(set NODE_ENV=dev || export NODE_ENV=dev) && nodemon --exec babel-node server/app.js",
-    "test": "export NODE_ENV=test || set NODE_ENV=test && mocha --require @babel/register test/** -timeout 15000 --exit"
+    "test": "export NODE_ENV=test || set NODE_ENV=test && mocha -S --require @babel/register test/** -timeout 15000 --exit"
   },
   "repository": {
     "type": "git",
@@ -53,6 +53,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^6.0.1",
+    "rand-token": "^1.0.1",
     "validator": "^13.0.0"
   }
 }

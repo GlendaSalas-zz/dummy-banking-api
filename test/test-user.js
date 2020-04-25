@@ -43,6 +43,7 @@ describe('User...', () => {
         res.body.should.have.property('user');
         const { user } = res.body;
         user.should.have.property('email');
+        user.should.have.property('clave');
         expect(user.email).to.equal(userOne.email);
         user.should.have.property('_balance');
         const { _balance } = user;

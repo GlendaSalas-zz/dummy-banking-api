@@ -5,9 +5,12 @@ import passportLocalMongoose from 'passport-local-mongoose';
 
 const UsersSchema = new mongoose.Schema({
   name: String,
-  phone: {
-    type: Number,
-    required: false,
+  transactionKey: {
+    type: String,
+    maxlength: 16,
+    minlength: 16,
+    unique: true,
+    required: true,
   },
   email: {
     type: String,
@@ -54,6 +57,7 @@ UsersSchema.methods.getBalance = async function getBalance() {
           name: 1,
           email: 1,
           _balance: 1,
+          transactionKey: 1,
         },
       },
       {

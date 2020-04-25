@@ -35,7 +35,7 @@ const transfer = async (req, res, next) => {
   const { money } = balance._balance;
   if (amount > money) throw new Exception('insufficientFunds');
   const receiverUser = await User
-    .findOne({ _id: receiver })
+    .findOne({ clave: receiver })
     .select('_balance');
   if (!receiverUser) throw new Exception('receiverNotFound');
   const giverUser = await Balance.updateOne({
