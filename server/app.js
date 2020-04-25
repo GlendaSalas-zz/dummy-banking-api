@@ -1,5 +1,6 @@
 import express from 'express';
 import passport from 'passport';
+import cors from 'cors'
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import router from './src/routes';
@@ -12,6 +13,7 @@ dotenv.config();
 
 const app = express().use(bodyParser.json());
 
+app.use(cors({ exposedHeaders: ['auth'] }));
 app.use(express.json());
 app.use(passport.initialize());
 app.use(`/${process.env.VERSION}`, router);
