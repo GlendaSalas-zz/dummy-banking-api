@@ -1,24 +1,32 @@
 import passport from 'passport';
 import { Exception, codeGenerate } from '../../handler/errors';
 import User from './userModel';
+import Balance from '../balance/balanceModel';
 
 const signup = async (req, res, next) => {
   const { password, email, confirm } = req.body;
   const regexW = /^(?=.*[-+_!@#$%^&*.,?])/;
   if (!regexW.test(password)) throw new Exception('At least one special character', 'specialCharacter');
   if (password !== confirm) throw new Exception('Password and confirm password does not match', 'confirm');
-  const user = new User({ email, password });
+  const balance = new Balance();
+  const user = new User({
+    email,
+    _balance: balance._id,
+  });
   try {
     await User.register(user, password);
+    await balance.save();
     return next();
   } catch (e) {
     const { name, message } = e;
+    await balance.delete();
     throw new Exception(name || 'validationError', message);
   }
 };
 const account = async (req, res) => {
   const { user } = req;
-  return res.status(200).send({ user });
+  const balance = await user.getBalance();
+  return res.status(200).send({ user: balance });
 };
 const login = async (req, res, next) => {
   await passport.authenticate('local', { session: false }, async (err, user) => {

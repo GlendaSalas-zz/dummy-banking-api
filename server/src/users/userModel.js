@@ -20,6 +20,11 @@ const UsersSchema = new mongoose.Schema({
       message: '{VALUE} no es valido',
     },
   },
+  _balance: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'balances',
+    required: true,
+  },
 });
 UsersSchema.methods.generateAuthToken = async function generateAuthToken() {
   const access = 'auth';
@@ -34,12 +39,83 @@ UsersSchema.methods.generateAuthToken = async function generateAuthToken() {
   ).toString();
   return { token };
 };
+UsersSchema.methods.getBalance = async function getBalance() {
+  try {
+    const user = await this.model('users').aggregate([
+      {
+        $match: {
+          _id: this._id,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: '$_id',
+          name: 1,
+          email: 1,
+          _balance: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: 'balances',
+          let: {
+            id: '$_balance',
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ['$_id', '$$id'],
+                },
+              },
+            },
+            {
+              $project: {
+                history: 1,
+              },
+            },
+            {
+              $unwind: {
+                path: '$history',
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                money: {
+                  $sum: '$history.money',
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                money: 1,
+              },
+            },
+          ],
+          as: '_balance',
+        },
+      },
+      {
+        $unwind: '$_balance',
+      },
+    ]);
+    if (!user[0]) return {};
+    return user[0];
+  } catch (e) {
+    return {};
+  }
+};
 UsersSchema.methods.toJSON = function toJson() {
   const user = this;
   const userObject = user.toObject();
   return {
     name: userObject.name,
     email: userObject.email,
+    id: userObject._id,
   };
 };
 UsersSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
