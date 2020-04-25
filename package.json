@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "description": "This is the api for the banking application\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[C dummy banking aplication",
   "main": "index.js",
+  "env": {
+    "browser": true,
+    "node": true,
+    "chai": true
+  },
   "engines": {
     "node": ">=12.15.0",
     "npm": ">=6.13.7"
   },
   "scripts": {
-    "dev": "(set NODE_ENV=dev || export NODE_ENV=dev) && nodemon --exec babel-node server/app.js"
+    "dev": "(set NODE_ENV=dev || export NODE_ENV=dev) && nodemon --exec babel-node server/app.js",
+    "test": "export NODE_ENV=test || set NODE_ENV=test && mocha --require @babel/register test/** -timeout 15000 --exit"
   },
   "repository": {
     "type": "git",
@@ -21,9 +27,13 @@
   },
   "homepage": "https://github.com/GlendaSalas/dummy-banking-api#readme",
   "devDependencies": {
+    "assert": "^2.0.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.2"
+    "eslint-plugin-import": "^2.20.2",
+    "mocha": "^7.1.1"
   },
   "dependencies": {
     "@babel/cli": "^7.8.4",

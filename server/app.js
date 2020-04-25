@@ -23,3 +23,5 @@ app.listen(process.env.PORT, async () => {
   // eslint-disable-next-line no-console
   console.log(`${process.env.PROJECT_NAME} ${process.env.VERSION} Listening ${process.env.PORT}`);
 });
+
+export default app;
