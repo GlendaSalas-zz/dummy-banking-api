@@ -4,7 +4,7 @@ import { signup, account, login } from './userController';
 
 const userRouter = express.Router();
 
-userRouter.post('/sign-up', catchErrors(signup), catchErrors(account));
+userRouter.post('/sign-up', catchErrors(signup), catchErrors(login), catchErrors(account));
 userRouter.post('/login', catchErrors(login), catchErrors(account));
 
 module.exports = userRouter;

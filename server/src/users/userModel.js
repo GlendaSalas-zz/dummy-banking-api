@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import validor from 'validator';
+import jwt from 'jsonwebtoken';
 import passportLocalMongoose from 'passport-local-mongoose';
 
 const UsersSchema = new mongoose.Schema({
@@ -21,7 +22,17 @@ const UsersSchema = new mongoose.Schema({
   },
 });
 UsersSchema.methods.generateAuthToken = async function generateAuthToken() {
-  return { token: Math.round(1000) };
+  const access = 'auth';
+  const params = { _id: this._id.toHexString(), access };
+  const token = jwt.sign(
+    params,
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.TIME_EXPIRES,
+      algorithm: 'HS256',
+    },
+  ).toString();
+  return { token };
 };
 UsersSchema.methods.toJSON = function toJson() {
   const user = this;

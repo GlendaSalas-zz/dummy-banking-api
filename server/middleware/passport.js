@@ -1,8 +1,11 @@
 import passport from 'passport';
 import local from 'passport-local';
+import passportJWT from 'passport-jwt';
 import User from '../src/users/userModel';
 
+const ExtractJWT = passportJWT.ExtractJwt;
 const LocalStrategy = local.Strategy;
+const JWTStrategy = passportJWT.Strategy;
 
 const localStrategy = new LocalStrategy({
   usernameField: 'email',
@@ -22,8 +25,22 @@ const localStrategy = new LocalStrategy({
     return cb('Incorrect access detected.');
   }
 });
+const jwtOptions = {};
+jwtOptions.jwtFromRequest = ExtractJWT.fromHeader('auth');
+jwtOptions.secretOrKey = process.env.JWT_SECRET;
+
+const loginJWT = new JWTStrategy(jwtOptions, async (jwtPayload, cb) => {
+  try {
+    const user = await User.findById(jwtPayload._id)
+      .exec();
+    return cb(null, user);
+  } catch (err) {
+    return cb(err);
+  }
+});
 
 passport.use(localStrategy);
+passport.use(loginJWT);
 passport.serializeUser((user, cb) => {
   cb(null, user._id);
 });
