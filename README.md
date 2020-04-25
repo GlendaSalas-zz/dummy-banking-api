@@ -16,3 +16,8 @@ A simple dummy web-based banking application
 - `npm run test`
 # Project url
 https://dummy-banking-api.herokuapp.com/v1
+
+# Stack:
+- MongoDB
+- Node.js
+- Express.js
