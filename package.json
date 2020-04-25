@@ -13,6 +13,9 @@
     "npm": ">=6.13.7"
   },
   "scripts": {
+    "clean": "rm -rf build && mkdir build",
+		"build": "npm run clean && babel -d ./build ./server -s",
+		"start": "npm run build && node ./build/app.js",
     "dev": "(set NODE_ENV=dev || export NODE_ENV=dev) && nodemon --exec babel-node server/app.js",
     "test": "export NODE_ENV=test || set NODE_ENV=test && mocha -S --require @babel/register test/** -timeout 15000 --exit"
   },
