@@ -20,6 +20,7 @@ module.exports = {
       {
           "allow": [
               "_id",
+              "_balance",
           ]
       }
   ],
